@@ -1,12 +1,14 @@
 import React from "react";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Paper,
+  Typography
+} from "@material-ui/core";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import relativeTime from "dayjs/plugin/relativeTime";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import SummaryExpansion from "./FilterExpansion";
 import { changeOrderStatus, blockUser } from "../redux/actions/dataActions";
 import { ROLE_USER, ROLE_SELLER, CANCELLED, BLOCKED, PLACED, ACCEPTED, PROCESSING, IN_ROUTE, DELIVERED, RECEIVED } from '../util/Const';
@@ -68,7 +70,8 @@ const OrderCard = (props) => {
   const order = props.order;
   const role = props.role;
   const classes = useStyles();
-  dayjs.extend(relativeTime);
+  // dayjs.extend(relativeTime);
+  dayjs.extend(localizedFormat);
   const dispatch = useDispatch();
 
   const handleBlock = () => {
@@ -119,7 +122,7 @@ const OrderCard = (props) => {
           <SummaryExpansion condition="Orders" items={order.items} />
         </div>
         <Typography gutterBottom variant="body1" color="textPrimary">
-          Ordered - {dayjs(order.createdAt).fromNow()}
+          Ordered - {dayjs(order.createdAt).format('L LT')}
         </Typography>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <FiberManualRecordIcon
@@ -129,7 +132,7 @@ const OrderCard = (props) => {
             }
           />
           <Typography gutterBottom variant="body1" color="textPrimary">
-            Order {order.status} - {dayjs(order.updatedAt).fromNow()}
+            Order {order.status} - {dayjs(order.updatedAt).format('L LT')}
           </Typography>
         </div>
         {role === ROLE_USER && order.status === PLACED && (

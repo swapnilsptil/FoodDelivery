@@ -1,8 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { Typography, Grid } from "@material-ui/core";
 import Spinner from "../util/spinner/spinner";
 
 const useStyles = makeStyles({

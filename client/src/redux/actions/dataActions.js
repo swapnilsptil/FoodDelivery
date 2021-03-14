@@ -32,7 +32,6 @@ export const fetchRestaurants = () => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({
         type: SET_RESTAURANTS,
         payload: [],
@@ -51,7 +50,6 @@ export const fetchRestaurant = (restId) => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({
         type: SET_RESTAURANT,
         payload: {},
@@ -71,7 +69,6 @@ export const addItem = (itemData) => (dispatch) => {
       dispatch({ type: CLEAR_ERRORS });
     })
     .catch((err) => {
-      console.log(err.response.data);
       if (err.response) {
         dispatch({
           type: SET_ERROR_ITEM,
@@ -109,7 +106,6 @@ export const editItem = (itemData, itemId) => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err.response.data);
       if (err.response) {
         dispatch({
           type: SET_ERROR_ITEM,
@@ -134,7 +130,19 @@ export const addToCart = (itemData) => (dispatch) => {
       dispatch(getCart());
     })
     .catch((err) => {
-      console.log(err.response);
+      dispatch({
+        type: ADD_CART_FAIL,
+      });
+    });
+};
+
+export const clearUserCart = (itemData) => (dispatch) => {
+  axios
+    .post("/clearUserCart")
+    .then((res) => {
+      dispatch(addToCart(itemData));
+    })
+    .catch((err) => {
       dispatch({
         type: ADD_CART_FAIL,
       });
@@ -151,7 +159,6 @@ export const getCart = () => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err.response);
       dispatch({
         type: SET_CART,
         payload: [],
@@ -177,7 +184,6 @@ export const removeCartItem = (itemID) => (dispatch) => {
   axios
     .post(`/remove-cart-item/${itemID}`)
     .then((res) => {
-      console.log(res.data);
       dispatch(getCart());
     })
     .catch((err) => {
@@ -190,17 +196,14 @@ export const fetchAddress = (userData, history) => (dispatch) => {
 };
 
 export const addAddress = (userData, history) => (dispatch) => {
-  console.log(userData.formattedAddress);
   axios
     .post("/user/address", userData)
     .then((res) => {
-      // console.log(res.data);
       dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
       dispatch(placeOrder(history));
     })
     .catch((err) => {
-      console.log(err.response);
       if (err.response) {
         dispatch({
           type: SET_ERRORS,
@@ -218,13 +221,14 @@ export const placeOrder = (history) => (dispatch) => {
   axios
     .post("/order")
     .then((res) => {
-      if(res.status === 200){
+      if (res.status === 200) {
         history.push("/orders");
         dispatch(getOrders());
+        dispatch(getCart());
       } else {
         dispatch({
           type: BLOCKED_USER,
-          payload : res.data
+          payload: res.data
         })
       }
     })
@@ -233,7 +237,7 @@ export const placeOrder = (history) => (dispatch) => {
     });
 };
 
-export const getOrders = () => (dispatch) => {
+export const getOrders = (history) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
     .get("/orders")
@@ -245,6 +249,7 @@ export const getOrders = () => (dispatch) => {
     })
     .catch((err) => {
       console.log(err.response);
+      history.push("/");
     });
 };
 

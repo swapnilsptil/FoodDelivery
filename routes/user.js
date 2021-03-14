@@ -45,6 +45,8 @@ router.get("/user", userController.getLoggedInUser);
 
 router.post("/order", auth.verifyUser, userController.postOrder);
 
+router.post("/clearUserCart", auth.verifyUser, userController.clearUserCart);
+
 router.get("/orders", userController.getOrders);
 
 router.post("/order-status/:orderId", userController.postOrderStatus);

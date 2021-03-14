@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import {
+  Button,
+  Grid,
+  Snackbar,
+  Typography
+} from "@material-ui/core";
 import openSocket from "socket.io-client";
-import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import useForm from "../hooks/forms";
 import ItemDialog from "../components/ItemDialog";
@@ -87,7 +89,7 @@ export default function SellerDashboard() {
     itemData.append("description", inputs.description);
     itemData.append("price", inputs.price);
     dispatch(addItem(itemData));
-    if(inputs.title && inputs.description && inputs.price && image){
+    if (inputs.title && inputs.description && inputs.price && image) {
       handleClose();
     }
   };
@@ -128,10 +130,10 @@ export default function SellerDashboard() {
         <Snackbar
           open={openOrderBar}
           autoHideDuration={3600}
-          onClose={()=>setOpenOrderBar(false)}
+          onClose={() => setOpenOrderBar(false)}
         >
           <Alert
-            onClose={()=>setOpenOrderBar(false)}
+            onClose={() => setOpenOrderBar(false)}
             style={{ backgroundColor: "#157a21" }}
           >
             New order received.

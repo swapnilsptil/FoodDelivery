@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import openSocket from "socket.io-client";
 import { getOrders, socketStatusUpdate } from "../redux/actions/dataActions";
 import OrderCard from "../components/OrderCard";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { Typography, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   ...theme.spreadThis,
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const Orders = (props) => {
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.data);
+  const history = useHistory();
   const {
     account: { role },
     _id,
@@ -30,7 +31,7 @@ const Orders = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    dispatch(getOrders());
+    dispatch(getOrders(history));
     const socket = openSocket(process.env.REACT_APP_SERVER_URL);
     socket.emit("add-user", { userId: _id });
     socket.on("orders", (data) => {
@@ -38,8 +39,8 @@ const Orders = (props) => {
         dispatch(socketStatusUpdate(data.order));
       }
       if (data.action === "create") {
-        dispatch(getOrders());
-        dispatch(getOrders());
+        dispatch(getOrders(history));
+        dispatch(getOrders(history));
       }
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

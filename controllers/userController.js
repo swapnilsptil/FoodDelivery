@@ -276,16 +276,17 @@ exports.postOrder = (req, res, next) => {
           });
           let isBlocked = false;
           seller.blocked.forEach(item => {
-            if(item.userId.equals(result._id)) {
+            if (item.userId.equals(result._id)) {
               isBlocked = true;
             }
           })
-          if(isBlocked){
+          if (isBlocked) {
             userObj.clearCart();
-            res.status(203).json({ 
-              status : 'Blocked', 
-              message : `Sorry, You don't have permission to place order with Restaurant. Please contact restaurant for order`});
-          }else {
+            res.status(203).json({
+              status: 'Blocked',
+              message: `Sorry, You don't have permission to place order with Restaurant. Please contact restaurant for order`
+            });
+          } else {
             const order = new Order({
               user: {
                 email: accountObj.email,
@@ -301,7 +302,7 @@ exports.postOrder = (req, res, next) => {
                 sellerId: seller,
               },
             });
-  
+
             order.save();
             for (const clientId of Object.keys(app.clients)) {
               if (clientId.toString() === seller._id.toString()) {
@@ -310,8 +311,8 @@ exports.postOrder = (req, res, next) => {
                 ].emit("orders", { action: "create", order: order });
               }
             }
-            res.status(200).json({ result });
             userObj.clearCart();
+            res.status(200).json({ result });
           }
         });
       }
@@ -322,8 +323,30 @@ exports.postOrder = (req, res, next) => {
     });
 };
 
+exports.clearUserCart = (req, res, next) => {
+  let accountObj;
+  let userObj;
+  Account.findById(req.loggedInUserId)
+    .then((account) => {
+      accountObj = account;
+      return User.findOne({ account: account._id });
+    })
+    .then((user) => {
+      userObj = user;
+      return user.populate("cart.items.itemId").execPopulate();
+    })
+    .then((result) => {
+      userObj.clearCart();
+      res.status(200).json({ message: 'Cart cleared' });
+    })
+    .catch((err) => {
+      if (!err.statusCode) err.statusCode = 500;
+      next(err);
+    });
+};
+
 exports.blockUser = (req, res, next) => {
-  
+
   let creator;
   const client_id = req.params.clientId;
   Account.findById(req.loggedInUserId)
@@ -335,21 +358,21 @@ exports.blockUser = (req, res, next) => {
       User.findById(client_id)
         .then((user) => {
           const block = new Blocked({
-              userId: user.id,
-              firstName : user.firstName,
-              lastName: user.lastName,
-              address : user.address
+            userId: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            address: user.address
           });
 
           block.save()
-            .then(()=>{
+            .then(() => {
               seller.blocked.push(block);
               seller.save().then((updatedSeller) => {
                 res.status(203).json({
                   message: "User Blocked",
                   blockedUser: block,
                   creator: { _id: seller._id, name: seller.name },
-                  message : `Sorry, You don't have permission to place order with Restaurant. Please contact restaurant for order`
+                  message: `Sorry, You don't have permission to place order with Restaurant. Please contact restaurant for order`
                 });
               });
             })

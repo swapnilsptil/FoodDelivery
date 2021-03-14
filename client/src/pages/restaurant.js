@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { Typography, Grid } from "@material-ui/core";
 import Spinner from "../util/spinner/spinner";
 import RestaurantInfo from "../components/RestaurantInfo";
 import RestaurantItems from "../components/RestaurantItems";

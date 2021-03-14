@@ -1,13 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Typography from "@material-ui/core/Typography";
+import {
+  Typography,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
+} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+
 
 const useStyles = makeStyles((theme) => ({
   ...theme.spreadThis,

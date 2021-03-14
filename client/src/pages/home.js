@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { Typography, Grid } from "@material-ui/core";
 import HomeStart from "../components/HomeStart";
 import Spinner from "../util/spinner/spinner";
 import RestaurantContent from "../components/RestaurantContent";
@@ -25,11 +24,11 @@ const Home = () => {
     authenticated,
   } = useSelector((state) => state.auth);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchRestaurants());
-  },[dispatch]);
+  }, [dispatch]);
 
-  
+
   return (
     <>
       {authenticated && role === ROLE_SELLER ? (

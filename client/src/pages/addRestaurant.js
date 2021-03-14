@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import {
+  Typography,
+  Button,
+  Grid,
+  Paper,
+  TextField,
+  CircularProgress
+} from "@material-ui/core";
 import useForm from "../hooks/forms";
-
 import { signupSeller } from "../redux/actions/authActions";
 import { ROLE_SELLER } from "../util/Const";
 

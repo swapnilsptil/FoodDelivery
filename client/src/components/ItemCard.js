@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Snackbar from "@material-ui/core/Snackbar";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Button,
+  Typography,
+  Snackbar
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -15,7 +17,7 @@ import useForm from "../hooks/forms";
 import MyButton from "../util/MyButton";
 import { deleteItem, editItem } from "../redux/actions/dataActions";
 import ItemDialog from "../components/ItemDialog";
-import { addToCart } from "../redux/actions/dataActions";
+import { addToCart, clearUserCart } from "../redux/actions/dataActions";
 import { ROLE_SELLER } from "../util/Const";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +50,7 @@ function Alert(props) {
 
 export default function ItemCard(props) {
   const classes = useStyles();
-  const { title, imageUrl, description, price, _id } = props;
+  const { title, imageUrl, description, price, _id, creator } = props;
   const imageUrlSplit = imageUrl.split("\\");
   const finalImageUrl = `${process.env.REACT_APP_SERVER_URL}/${imageUrlSplit[0]}`;
 
@@ -58,7 +60,7 @@ export default function ItemCard(props) {
     authenticated,
     account: { role },
   } = useSelector((state) => state.auth);
-  const { addCartSuccess } = useSelector((state) => state.data);
+  const { addCartSuccess, cart } = useSelector((state) => state.data);
 
   const [open, setOpen] = useState(false);
   const [openSnackBar, setSnackBar] = useState(false);
@@ -104,10 +106,26 @@ export default function ItemCard(props) {
   };
 
   const handleCart = () => {
+    let isDiffRest = false;
+    cart.forEach(cartItem => {
+      const { itemId } = cartItem;
+      if (itemId.creator !== creator) {
+        isDiffRest = true;
+      }
+    })
+
     const itemData = {
       itemId: _id,
     };
-    dispatch(addToCart(itemData));
+    if (!isDiffRest) {
+      dispatch(addToCart(itemData));
+    } else {
+      const confirmation = window.confirm("You have items in cart from different Restaurant. Do you want to clear cart before adding item ?");
+      if (confirmation) {
+        dispatch(clearUserCart(itemData));
+      }
+    }
+
   };
 
   const handleCloseSnackBar = (event, reason) => {

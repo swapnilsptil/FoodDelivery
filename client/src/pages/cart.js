@@ -3,12 +3,14 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart, fetchAddress } from "../redux/actions/dataActions";
 import Spinner from "../util/spinner/spinner";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import {
+  Grid,
+  Typography,
+  Paper,
+  Button,
+  TextField
+} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import MyButton from "../util/MyButton";
 import useForm from "../hooks/forms";
@@ -64,12 +66,12 @@ const Cart = (props) => {
   let zipError = null;
   let phoneNoError = null;
 
-  if(blocked?.status === "Blocked") {
+  if (blocked?.status === "Blocked") {
     alert(blocked.message);
     props.history.push('/');
     dispatch({
       type: BLOCKED_USER,
-      payload : {}
+      payload: {}
     })
   }
 
@@ -89,38 +91,38 @@ const Cart = (props) => {
   const { inputs, handleInputChange } = useForm({
     street:
       props.location.state.address != null &&
-      // eslint-disable-next-line
-      props.location.state.address != undefined
+        // eslint-disable-next-line
+        props.location.state.address != undefined
         ? props.location.state.address.street
         : "",
     locality:
       props.location.state.address != null &&
-      // eslint-disable-next-line
-      props.location.state.address != undefined
+        // eslint-disable-next-line
+        props.location.state.address != undefined
         ? props.location.state.address.locality
         : "",
     aptName:
       props.location.state.address != null &&
-      // eslint-disable-next-line
-      props.location.state.address != undefined
+        // eslint-disable-next-line
+        props.location.state.address != undefined
         ? props.location.state.address.aptName
         : "",
     zip:
       props.location.state.address != null &&
-      // eslint-disable-next-line
-      props.location.state.address != undefined
+        // eslint-disable-next-line
+        props.location.state.address != undefined
         ? props.location.state.address.zip
         : "",
     phoneNo:
       props.location.state.address != null &&
-      // eslint-disable-next-line
-      props.location.state.address != undefined
+        // eslint-disable-next-line
+        props.location.state.address != undefined
         ? props.location.state.address.phoneNo
         : "",
   });
 
+
   useEffect(() => {
-    console.log("in useEffect cart");
     dispatch(getCart());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
