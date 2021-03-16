@@ -229,7 +229,8 @@ export const placeOrder = (history) => (dispatch) => {
         dispatch({
           type: BLOCKED_USER,
           payload: res.data
-        })
+        });
+        dispatch(getCart());
       }
     })
     .catch((err) => {

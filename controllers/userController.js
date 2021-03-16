@@ -7,7 +7,6 @@ const Item = require("../models/item");
 const User = require("../models/user");
 const Account = require("../models/account");
 const Order = require("../models/order");
-const Blocked = require("../models/blocked");
 const io = require("../util/socket");
 const app = require("../app");
 
@@ -270,13 +269,13 @@ exports.postOrder = (req, res, next) => {
       }, {});
 
       for (let [seller, cartItem] of Object.entries(sellers)) {
-        Seller.findById(seller).populate("blocked").then((seller) => {
+        Seller.findById(seller).then((seller) => {
           const items = cartItem.map((i) => {
             return { quantity: i.quantity, item: { ...i.itemId._doc } };
           });
           let isBlocked = false;
           seller.blocked.forEach(item => {
-            if (item.userId.equals(result._id)) {
+            if (item.equals(result._id)) {
               isBlocked = true;
             }
           })
@@ -357,25 +356,16 @@ exports.blockUser = (req, res, next) => {
       creator = seller;
       User.findById(client_id)
         .then((user) => {
-          const block = new Blocked({
-            userId: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            address: user.address
-          });
 
-          block.save()
-            .then(() => {
-              seller.blocked.push(block);
-              seller.save().then((updatedSeller) => {
-                res.status(203).json({
-                  message: "User Blocked",
-                  blockedUser: block,
-                  creator: { _id: seller._id, name: seller.name },
-                  message: `Sorry, You don't have permission to place order with Restaurant. Please contact restaurant for order`
-                });
-              });
-            })
+          seller.blocked.push(user._id);
+          seller.save().then((updatedSeller) => {
+            res.status(203).json({
+              message: "User Blocked",
+              blockedUser: user,
+              creator: { _id: seller._id, name: seller.name },
+              message: `Sorry, You don't have permission to place order with Restaurant. Please contact restaurant for order`
+            });
+          });
         })
     })
     .catch((err) => {

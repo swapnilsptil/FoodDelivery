@@ -14,18 +14,17 @@ const deliveryInfo = {
 
 const blockedSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    userId: {
+    userInfo: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
+      unique: false,
+    },
+    sellerInfo: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Seller",
+      unique: false,
     },
     address: deliveryInfo,
   },

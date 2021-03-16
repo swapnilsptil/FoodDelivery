@@ -115,7 +115,7 @@ const OrderCard = (props) => {
 
         {role === ROLE_SELLER && (
           <Typography gutterBottom variant="body1" color="textPrimary">
-            {`Address - ${order.user.address.aptName} ${order.user.address.locality}`}
+            {`Address - ${order.user.address.aptName}, ${order.user.address.street}, ${order.user.address.locality}`}
           </Typography>
         )}
         <div style={{ margin: "10px 20px 10px 0px" }}>

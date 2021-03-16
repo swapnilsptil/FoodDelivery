@@ -43,7 +43,7 @@ const sellerSchema = new Schema(
     ],
     account: { type: Schema.Types.ObjectId, required: true, ref: "Account" },
     items: [{ type: Schema.Types.ObjectId, ref: "Item" }],
-    blocked: [{ type: Schema.Types.ObjectId, ref: "Blocked" }],
+    blocked: [{ type : Schema.Types.ObjectId, unique: false, ref: "Account" }],
   },
   { timestamps: true }
 );

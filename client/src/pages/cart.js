@@ -166,7 +166,8 @@ const Cart = (props) => {
                 step === 1 &&
                 cart.map((item) => (
                   <CartItem {...item} key={item.itemId._id} />
-                ))}
+                )
+              )}
               {step === 2 && (
                 <form>
                   <Typography
@@ -223,6 +224,7 @@ const Cart = (props) => {
                       helperText={zipError}
                       error={zipError ? true : false}
                       type="number"
+                      inputProps={{maxLength :6}}
                       fullWidth
                       required
                     />

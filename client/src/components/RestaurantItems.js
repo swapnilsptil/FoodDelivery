@@ -41,7 +41,7 @@ function RestaurantItems(props) {
               </p>
             ) : (
               <p className={classes.para}>
-                No Items present to order, Come back Later.
+                No items found that match your search
               </p>
             )
           ) }
